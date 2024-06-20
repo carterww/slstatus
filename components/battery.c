@@ -1,5 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "../slstatus.h"
@@ -75,6 +76,53 @@
 
 		return (i == LEN(map)) ? "?" : map[i].symbol;
 	}
+
+
+        static const char *batsym[] = {
+                "󰂎",
+                "󰁺",
+                "󰁻",
+                "󰁼",
+                "󰁽",
+                "󰁾",
+                "󰁿",
+                "󰂀",
+                "󰂁",
+                "󰂂",
+                "󱟢",
+        };
+
+        static const char *batsymchrg[] = {
+                "󰢟",
+                "󰢜",
+                "󰂆",
+                "󰂇",
+                "󰂈",
+                "󰢝",
+                "󰂉",
+                "󰢞",
+                "󰂊",
+                "󰂋",
+                "󰂅",
+        };
+
+
+        const char *
+        battery_formatted(const char *bat)
+        {
+                const char *perc = battery_perc(bat);
+                const char *state = battery_state(bat);
+                if (!perc || !state) {
+                        return "";
+                }
+                int cap_perc = atoi(perc);
+                if (state[0] == '+') {
+                        return bprintf("%s %s\%", batsymchrg[cap_perc / 10], perc);
+                } else {
+                        return bprintf("%s %s\%", batsym[cap_perc / 10], perc);
+                }
+        }
+
 
 	const char *
 	battery_remaining(const char *bat)
